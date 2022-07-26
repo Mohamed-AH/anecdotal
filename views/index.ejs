@@ -1,46 +1,62 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
-  <meta charset="UTF-8">
-  <meta http-equiv="X-UA-Compatible" content="IE=edge">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Small Stories</title>
-<link  href="css/styles.css" rel="stylesheet" type="text/css">
+  <head>
+    <meta charset="UTF-8" />
+    <title>Anecdote App</title>
+    <link rel="stylesheet" href="css/styles.css" />
+  </head>
 
-</head>
-<body>
-  <h1>Small Stories</h1>
-  <p class="story"></p>
-<!-- <%= stories %> -->
+  <body>
+    <h1 data-position="header">Share your best Anecdotes !</h1>
 
-<% for(let i = 0; i<stories.length;i++) {%>
-<li class="stories">
-    <span><%= stories[i].Author %></span>:
+    <section data-position="add-quote">
+      <h4>Add Anecdote</h4>
 
- <span><%= stories[i].Story %></span>
-</li>
-<%} %>
-<form action="/stories" method="POST">
-  <input  type="text" placeholder="Author" name="Author">
-  <input  type="text" placeholder="Story"  name="Story">
-  <button type="submit">Submit</button>
-</form> 
+      <form action="/stories" method="POST">
+        <input type="text" placeholder="Author/replace/delete" name="Author" />
+        <input type="text" placeholder="Story" name="Story" />
+        <button type="submit">Submit</button>
+      </form>
+    </section>
 
-<div>
-    <h2> replacing Mohamed's first story! </h2>
-    <p>
-        Replace first Mohamed's story with a story written by Noman
-    </p>
-    <button id="update-button">Replace Mohamed's story</button>
+    <section data-position="update-quote">
+      <div>
+        <h4>Try Replace command!</h4>
+        <p>
+          To try this command, add an anecdote with "replace" as author name.
+        </p>
+        <button id="update-button">Try Replace command!</button>
+      </div>
+    </section>
+
+    <section data-position="delete-quote">
+      <div>
+        <h4>Try Delete command!</h4>
+        <p>
+          To try this command, add an anecdote with "delete" as author name.. Does nothing if there are no more
+          anecdotes with "delete" as author name.
+        </p>
+        <button id="delete-button">Try Delete command!</button>
+      </div>
+      <div id="message"></div>
+    </section>
+
+    <section data-position="quotes">
+      <h2>Anecdotes/Stories</h2>
+
+      <ul class="quotes">
+        <% for(var i = 0; i <  stories.length; i++) {%>
+        <li class="quote">
+          
+          <span><%= stories[i].Author %></span>:
+<div class="subitem">
+          <span><%= stories[i].Story %></span>
 </div>
-<div>
-    <h2> remove Nomans story! </h2>
-    <p>
-        delete one of Nomans story. dont do anyting if there are no more noman stories
-    </p>
-    <button id="delete-button">Delete Noman's story</button>
-</div>
+        </li>
+        <% } %>
+      </ul>
+    </section>
 
-  <script src="/main.js"></script>
-</body>
+    <script src="/main.js"></script>
+  </body>
 </html>

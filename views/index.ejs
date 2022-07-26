@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Small Stories</title>
+<link  href="css/styles.css" rel="stylesheet" type="text/css">
+
+</head>
+<body>
+  <h1>Small Stories</h1>
+  <p class="story"></p>
+<!-- <%= stories %> -->
+
+<% for(let i = 0; i<stories.length;i++) {%>
+<li class="stories">
+    <span><%= stories[i].Author %></span>:
+
+ <span><%= stories[i].Story %></span>
+</li>
+<%} %>
+<form action="/stories" method="POST">
+  <input  type="text" placeholder="Author" name="Author">
+  <input  type="text" placeholder="Story"  name="Story">
+  <button type="submit">Submit</button>
+</form> 
+
+<div>
+    <h2> replacing Mohamed's first story! </h2>
+    <p>
+        Replace first Mohamed's story with a story written by Noman
+    </p>
+    <button id="update-button">Replace Mohamed's story</button>
+</div>
+<div>
+    <h2> remove Nomans story! </h2>
+    <p>
+        delete one of Nomans story. dont do anyting if there are no more noman stories
+    </p>
+    <button id="delete-button">Delete Noman's story</button>
+</div>
+
+  <script src="/main.js"></script>
+</body>
+</html>

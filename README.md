@@ -2,7 +2,7 @@
 
 This is an CRUD app for sharing Anecdotes / short stories.
 
-**Link to project:** https://anecdotal.herokuapp.com/
+**Link to project:** https://anecdotalnode.herokuapp.com/
 
 ![alt tag](https://i.imgur.com/U9GcOWz.jpg)
 

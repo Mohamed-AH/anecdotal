@@ -64,15 +64,15 @@ MongoClient.connect(dbConnectionStr,  { useUnifiedTopology: true })
     app.put("/stories", (req, res) => {
       storiesCollection
         .findOneAndUpdate(
-          { Author: "Mohamed" },
+          { Author: "Mohamed" },          
           {
             $set: {
               Author: req.body.Author,
               Story: req.body.Story,
-            },
+            }
           },
           {
-            upsert: true,
+            upsert: false
           }
         )
         .then((result) => res.json("Success"))

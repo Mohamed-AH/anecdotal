@@ -7,8 +7,8 @@ fetch ('/stories', {
     method: 'put',
     headers: { 'Content-Type' : 'application/json'},
     body: JSON.stringify({
-        Author: 'successfully replaced',
-        Story: 'the story written by "replace" was replaced'
+        Author: 'a successor to Mo',
+        Story: 'the story written by Mohamed was replaced'
     })
 }).then(res => {
     if (res.ok) return res.json()
@@ -27,7 +27,7 @@ deleteButton.addEventListener('click', _ => {
         method: 'delete',
         headers: { 'Content-Type' : 'application/json'},
         body: JSON.stringify({
-Author: 'delete'
+Author: 'Mohamed'
         })
     }).then(res => {
         if (res.ok) return res.json() 

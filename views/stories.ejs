@@ -1,0 +1,210 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Browse Stories - Anecdotal</title>
+  <link rel="stylesheet" href="/css/styles.css">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Crimson+Pro:wght@400;600;700&family=Literata:opsz,wght@7..72,300;7..72,400;7..72,600&family=Cormorant+Garamond:ital,wght@0,400;0,600;1,400&display=swap" rel="stylesheet">
+</head>
+<body class="stories-page">
+
+  <!-- Navigation -->
+  <nav class="nav-main">
+    <div class="nav-container">
+      <a href="/" class="logo">Anecdotal</a>
+      <div class="nav-links">
+        <a href="/stories" class="active">Browse Stories</a>
+        <a href="/write" class="btn-primary-small">Write</a>
+      </div>
+    </div>
+  </nav>
+
+  <!-- Page Header -->
+  <header class="page-header">
+    <div class="page-header-content">
+      <h1 class="page-title fade-in">Story Collection</h1>
+      <p class="page-subtitle fade-in" style="animation-delay: 0.1s">
+        Explore anecdotes and moments shared by our community of writers
+      </p>
+    </div>
+  </header>
+
+  <!-- Search & Filter Bar -->
+  <section class="filter-section">
+    <div class="filter-container">
+      <form action="/stories" method="GET" class="search-form">
+        <div class="search-bar">
+          <svg class="search-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <circle cx="11" cy="11" r="8"></circle>
+            <path d="m21 21-4.35-4.35"></path>
+          </svg>
+          <input
+            type="text"
+            name="search"
+            class="search-input"
+            placeholder="Search stories, authors, or tags..."
+            value="<%= searchQuery %>"
+          >
+          <% if (searchQuery) { %>
+          <a href="/stories" class="clear-search" aria-label="Clear search">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <line x1="18" y1="6" x2="6" y2="18"></line>
+              <line x1="6" y1="6" x2="18" y2="18"></line>
+            </svg>
+          </a>
+          <% } %>
+        </div>
+
+        <div class="filter-controls">
+          <label for="sort-select" class="filter-label">Sort by:</label>
+          <select name="sort" id="sort-select" class="sort-select" onchange="this.form.submit()">
+            <option value="newest" <%= sortBy === 'newest' ? 'selected' : '' %>>Newest First</option>
+            <option value="oldest" <%= sortBy === 'oldest' ? 'selected' : '' %>>Oldest First</option>
+            <option value="author" <%= sortBy === 'author' ? 'selected' : '' %>>By Author</option>
+          </select>
+        </div>
+      </form>
+    </div>
+  </section>
+
+  <!-- Stories Grid -->
+  <main class="main-content">
+    <div class="stories-container">
+
+      <% if (stories.length === 0) { %>
+        <div class="empty-state">
+          <svg class="empty-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+            <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path>
+            <polyline points="14 2 14 8 20 8"></polyline>
+          </svg>
+          <h2>No stories found</h2>
+          <% if (searchQuery) { %>
+            <p>Try adjusting your search terms or <a href="/stories">browse all stories</a></p>
+          <% } else { %>
+            <p>Be the first to <a href="/write">share your story</a></p>
+          <% } %>
+        </div>
+      <% } else { %>
+        <div class="stories-grid-full">
+          <% stories.forEach((story, index) => { %>
+            <article class="story-card-full fade-in" style="animation-delay: <%= 0.05 * (index + 1) %>s" data-story-id="<%= story._id %>">
+              <div class="story-header-full">
+                <div class="author-info">
+                  <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path>
+                    <circle cx="12" cy="7" r="4"></circle>
+                  </svg>
+                  <span class="story-author-name"><%= story.Author %></span>
+                </div>
+                <div class="story-meta">
+                  <% if (story.createdAt) { %>
+                  <time class="story-date">
+                    <%= new Date(story.createdAt).toLocaleDateString('en-US', {
+                      year: 'numeric',
+                      month: 'long',
+                      day: 'numeric'
+                    }) %>
+                  </time>
+                  <% } %>
+                </div>
+              </div>
+
+              <div class="story-body">
+                <p class="story-text"><%= story.Story %></p>
+              </div>
+
+              <% if (story.tags) { %>
+              <div class="story-tags">
+                <svg class="tag-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <path d="M20.59 13.41l-7.17 7.17a2 2 0 0 1-2.83 0L2 12V2h10l8.59 8.59a2 2 0 0 1 0 2.82z"></path>
+                  <line x1="7" y1="7" x2="7.01" y2="7"></line>
+                </svg>
+                <span class="tag"><%= story.tags %></span>
+              </div>
+              <% } %>
+
+              <div class="story-actions">
+                <button class="action-btn edit-btn" data-id="<%= story._id %>" data-author="<%= story.Author %>" data-story="<%= story.Story %>" data-tags="<%= story.tags || '' %>">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"></path>
+                    <path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"></path>
+                  </svg>
+                  Edit
+                </button>
+                <button class="action-btn delete-btn" data-id="<%= story._id %>">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <polyline points="3 6 5 6 21 6"></polyline>
+                    <path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path>
+                  </svg>
+                  Delete
+                </button>
+              </div>
+            </article>
+          <% }); %>
+        </div>
+
+        <div class="results-summary">
+          <p>Showing <%= stories.length %> <%= stories.length === 1 ? 'story' : 'stories' %></p>
+        </div>
+      <% } %>
+    </div>
+  </main>
+
+  <!-- Edit Modal -->
+  <div id="edit-modal" class="modal">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h2>Edit Story</h2>
+        <button class="modal-close" id="close-modal">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <line x1="18" y1="6" x2="6" y2="18"></line>
+            <line x1="6" y1="6" x2="18" y2="18"></line>
+          </svg>
+        </button>
+      </div>
+      <form id="edit-form">
+        <input type="hidden" id="edit-story-id">
+        <div class="form-group">
+          <label for="edit-author">Author</label>
+          <input type="text" id="edit-author" required maxlength="100">
+        </div>
+        <div class="form-group">
+          <label for="edit-story">Story</label>
+          <textarea id="edit-story" rows="6" required minlength="10" maxlength="5000"></textarea>
+        </div>
+        <div class="form-group">
+          <label for="edit-tags">Tags (optional)</label>
+          <input type="text" id="edit-tags" placeholder="fiction, memoir, poetry...">
+        </div>
+        <div class="form-actions">
+          <button type="button" class="btn-secondary" id="cancel-edit">Cancel</button>
+          <button type="submit" class="btn-primary">Save Changes</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- Footer -->
+  <footer class="footer">
+    <div class="footer-content">
+      <div class="footer-brand">
+        <h3>Anecdotal</h3>
+        <p>Where stories breathe and writers thrive.</p>
+      </div>
+      <div class="footer-links">
+        <a href="/stories">Browse</a>
+        <a href="/write">Write</a>
+        <a href="https://github.com/Mohamed-AH/anecdotal" target="_blank">GitHub</a>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      <p>&copy; <%= new Date().getFullYear() %> Anecdotal. Crafted with care for storytellers.</p>
+    </div>
+  </footer>
+
+  <script src="/js/stories.js"></script>
+</body>
+</html>

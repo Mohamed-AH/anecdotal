@@ -1,0 +1,135 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Anecdotal - Where Stories Come to Life</title>
+  <link rel="stylesheet" href="/css/styles.css">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Crimson+Pro:wght@400;600;700&family=Literata:opsz,wght@7..72,300;7..72,400;7..72,600&family=Cormorant+Garamond:ital,wght@0,400;0,600;1,400&display=swap" rel="stylesheet">
+</head>
+<body class="landing-page">
+
+  <!-- Navigation -->
+  <nav class="nav-main">
+    <div class="nav-container">
+      <a href="/" class="logo">Anecdotal</a>
+      <div class="nav-links">
+        <a href="/stories">Browse Stories</a>
+        <a href="/write" class="btn-primary-small">Write</a>
+      </div>
+    </div>
+  </nav>
+
+  <!-- Hero Section -->
+  <section class="hero">
+    <div class="hero-content">
+      <h1 class="hero-title">
+        <span class="typewriter" data-text="Every story deserves to be told."></span>
+      </h1>
+      <p class="hero-subtitle">
+        A sanctuary for creative writers to share anecdotes, micro-stories, and moments that matter.
+      </p>
+      <div class="hero-cta">
+        <a href="/write" class="btn-primary">Start Writing</a>
+        <a href="/stories" class="btn-secondary">Explore Stories</a>
+      </div>
+    </div>
+    <div class="hero-decoration">
+      <div class="ink-splatter ink-splatter-1"></div>
+      <div class="ink-splatter ink-splatter-2"></div>
+    </div>
+  </section>
+
+  <!-- Stats Section -->
+  <section class="stats-section">
+    <div class="stats-container">
+      <div class="stat-card fade-in" style="animation-delay: 0.1s">
+        <div class="stat-number"><%= totalStories || 0 %></div>
+        <div class="stat-label">Stories Shared</div>
+      </div>
+      <div class="stat-card fade-in" style="animation-delay: 0.2s">
+        <div class="stat-number">∞</div>
+        <div class="stat-label">Creative Possibilities</div>
+      </div>
+      <div class="stat-card fade-in" style="animation-delay: 0.3s">
+        <div class="stat-number">24/7</div>
+        <div class="stat-label">Inspiration Available</div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Featured Stories -->
+  <% if (featuredStories && featuredStories.length > 0) { %>
+  <section class="featured-section">
+    <div class="section-header">
+      <h2 class="section-title">Recent Stories</h2>
+      <p class="section-subtitle">Fresh narratives from our community of writers</p>
+    </div>
+
+    <div class="stories-grid">
+      <% featuredStories.forEach((story, index) => { %>
+        <article class="story-card fade-in" style="animation-delay: <%= 0.1 * (index + 1) %>s">
+          <div class="story-header">
+            <span class="story-author">
+              <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path>
+                <circle cx="12" cy="7" r="4"></circle>
+              </svg>
+              <%= story.Author %>
+            </span>
+            <% if (story.createdAt) { %>
+            <span class="story-date"><%= new Date(story.createdAt).toLocaleDateString('en-US', { month: 'short', day: 'numeric' }) %></span>
+            <% } %>
+          </div>
+          <div class="story-content">
+            <p><%= story.Story.length > 200 ? story.Story.substring(0, 200) + '...' : story.Story %></p>
+          </div>
+          <% if (story.tags) { %>
+          <div class="story-tags">
+            <span class="tag"><%= story.tags %></span>
+          </div>
+          <% } %>
+        </article>
+      <% }); %>
+    </div>
+
+    <div class="section-cta">
+      <a href="/stories" class="btn-secondary">View All Stories</a>
+    </div>
+  </section>
+  <% } %>
+
+  <!-- CTA Section -->
+  <section class="cta-section">
+    <div class="cta-content">
+      <h2 class="cta-title">Your story is waiting to be written</h2>
+      <p class="cta-text">
+        Join our community of writers who believe that every moment, every memory, every fleeting thought deserves a place in the world.
+      </p>
+      <a href="/write" class="btn-primary-large">Begin Your Story</a>
+    </div>
+  </section>
+
+  <!-- Footer -->
+  <footer class="footer">
+    <div class="footer-content">
+      <div class="footer-brand">
+        <h3>Anecdotal</h3>
+        <p>Where stories breathe and writers thrive.</p>
+      </div>
+      <div class="footer-links">
+        <a href="/stories">Browse</a>
+        <a href="/write">Write</a>
+        <a href="https://github.com/Mohamed-AH/anecdotal" target="_blank">GitHub</a>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      <p>&copy; <%= new Date().getFullYear() %> Anecdotal. Crafted with care for storytellers.</p>
+    </div>
+  </footer>
+
+  <script src="/js/landing.js"></script>
+</body>
+</html>

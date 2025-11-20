@@ -1,0 +1,206 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Write Your Story - Anecdotal</title>
+  <link rel="stylesheet" href="/css/styles.css">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Crimson+Pro:wght@400;600;700&family=Literata:opsz,wght@7..72,300;7..72,400;7..72,600&family=Cormorant+Garamond:ital,wght@0,400;0,600;1,400&display=swap" rel="stylesheet">
+</head>
+<body class="write-page">
+
+  <!-- Navigation -->
+  <nav class="nav-main">
+    <div class="nav-container">
+      <a href="/" class="logo">Anecdotal</a>
+      <div class="nav-links">
+        <a href="/stories">Browse Stories</a>
+        <a href="/write" class="active btn-primary-small">Write</a>
+      </div>
+    </div>
+  </nav>
+
+  <!-- Write Container -->
+  <main class="write-container">
+    <div class="write-content">
+
+      <!-- Writing Header -->
+      <header class="write-header fade-in">
+        <h1 class="write-title">Craft Your Story</h1>
+        <p class="write-subtitle">
+          Every word matters. Take your time, let your thoughts flow, and share something meaningful.
+        </p>
+      </header>
+
+      <!-- Writing Form -->
+      <form id="story-form" class="story-form fade-in" style="animation-delay: 0.1s">
+
+        <div class="form-section">
+          <label for="author-input" class="form-label">
+            <svg class="label-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path>
+              <circle cx="12" cy="7" r="4"></circle>
+            </svg>
+            Your Name
+          </label>
+          <input
+            type="text"
+            id="author-input"
+            name="Author"
+            placeholder="Who should we credit for this masterpiece?"
+            required
+            maxlength="100"
+            class="form-input"
+          >
+          <span class="input-hint">This will be publicly visible</span>
+        </div>
+
+        <div class="form-section">
+          <label for="story-input" class="form-label">
+            <svg class="label-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path>
+              <polyline points="14 2 14 8 20 8"></polyline>
+              <line x1="16" y1="13" x2="8" y2="13"></line>
+              <line x1="16" y1="17" x2="8" y2="17"></line>
+              <line x1="10" y1="9" x2="8" y2="9"></line>
+            </svg>
+            Your Story
+          </label>
+          <textarea
+            id="story-input"
+            name="Story"
+            placeholder="Once upon a time... or perhaps it was just yesterday. Share an anecdote, a moment, a memory that deserves to be told..."
+            required
+            minlength="10"
+            maxlength="5000"
+            rows="12"
+            class="form-textarea"
+          ></textarea>
+          <div class="textarea-footer">
+            <span class="input-hint">Minimum 10 characters, maximum 5000</span>
+            <span id="char-count" class="char-count">0 / 5000</span>
+          </div>
+        </div>
+
+        <div class="form-section">
+          <label for="tags-input" class="form-label">
+            <svg class="label-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M20.59 13.41l-7.17 7.17a2 2 0 0 1-2.83 0L2 12V2h10l8.59 8.59a2 2 0 0 1 0 2.82z"></path>
+              <line x1="7" y1="7" x2="7.01" y2="7"></line>
+            </svg>
+            Tags (Optional)
+          </label>
+          <input
+            type="text"
+            id="tags-input"
+            name="tags"
+            placeholder="fiction, memoir, poetry, inspiration..."
+            class="form-input"
+          >
+          <span class="input-hint">Help others discover your story</span>
+        </div>
+
+        <div id="form-message" class="form-message"></div>
+
+        <div class="form-actions-write">
+          <button type="button" id="preview-btn" class="btn-secondary">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path>
+              <circle cx="12" cy="12" r="3"></circle>
+            </svg>
+            Preview
+          </button>
+          <button type="submit" id="publish-btn" class="btn-primary">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M19 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11l5 5v11a2 2 0 0 1-2 2z"></path>
+              <polyline points="17 21 17 13 7 13 7 21"></polyline>
+              <polyline points="7 3 7 8 15 8"></polyline>
+            </svg>
+            Publish Story
+          </button>
+        </div>
+
+      </form>
+
+      <!-- Writing Tips -->
+      <aside class="writing-tips fade-in" style="animation-delay: 0.2s">
+        <h3>Writing Tips</h3>
+        <ul class="tips-list">
+          <li>
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <polyline points="20 6 9 17 4 12"></polyline>
+            </svg>
+            <span>Be authentic - your unique voice is what makes your story special</span>
+          </li>
+          <li>
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <polyline points="20 6 9 17 4 12"></polyline>
+            </svg>
+            <span>Show, don't just tell - use vivid details and sensory descriptions</span>
+          </li>
+          <li>
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <polyline points="20 6 9 17 4 12"></polyline>
+            </svg>
+            <span>Keep it concise - every word should earn its place in your story</span>
+          </li>
+          <li>
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <polyline points="20 6 9 17 4 12"></polyline>
+            </svg>
+            <span>Read it aloud before publishing - you'll catch awkward phrasing</span>
+          </li>
+        </ul>
+      </aside>
+
+    </div>
+  </main>
+
+  <!-- Preview Modal -->
+  <div id="preview-modal" class="modal">
+    <div class="modal-content preview-modal-content">
+      <div class="modal-header">
+        <h2>Story Preview</h2>
+        <button class="modal-close" id="close-preview">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <line x1="18" y1="6" x2="6" y2="18"></line>
+            <line x1="6" y1="6" x2="18" y2="18"></line>
+          </svg>
+        </button>
+      </div>
+      <div class="preview-body">
+        <article class="preview-story">
+          <div class="story-header-full">
+            <div class="author-info">
+              <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path>
+                <circle cx="12" cy="7" r="4"></circle>
+              </svg>
+              <span class="story-author-name" id="preview-author">Author Name</span>
+            </div>
+            <time class="story-date" id="preview-date"></time>
+          </div>
+          <div class="story-body">
+            <p class="story-text" id="preview-text"></p>
+          </div>
+          <div class="story-tags" id="preview-tags-container" style="display: none;">
+            <svg class="tag-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M20.59 13.41l-7.17 7.17a2 2 0 0 1-2.83 0L2 12V2h10l8.59 8.59a2 2 0 0 1 0 2.82z"></path>
+              <line x1="7" y1="7" x2="7.01" y2="7"></line>
+            </svg>
+            <span class="tag" id="preview-tags"></span>
+          </div>
+        </article>
+      </div>
+      <div class="preview-footer">
+        <button id="close-preview-btn" class="btn-secondary">Close Preview</button>
+        <button id="publish-from-preview" class="btn-primary">Looks Good - Publish</button>
+      </div>
+    </div>
+  </div>
+
+  <script src="/js/write.js"></script>
+</body>
+</html>

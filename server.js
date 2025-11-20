@@ -13,6 +13,11 @@ const { isAuthenticated, isOwner, injectUser } = require('./middleware/auth');
 // Set view engine
 app.set("view engine", "ejs");
 
+// Trust first proxy (required for Render, Railway, Heroku, etc.)
+if (process.env.NODE_ENV === 'production') {
+  app.set('trust proxy', 1);
+}
+
 // Middleware
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(bodyParser.json());
@@ -69,25 +74,31 @@ MongoClient.connect(dbConnectionStr, { useUnifiedTopology: true })
     const usersCollection = db.collection("users");
 
     // Session configuration
-    app.use(
-      session({
-        secret: process.env.SESSION_SECRET,
-        resave: false,
-        saveUninitialized: false,
-        store: MongoStore.create({
-          client: client,
-          dbName: 'anecdotes-stories',
-          collectionName: 'sessions',
-          ttl: 14 * 24 * 60 * 60 // 14 days
-        }),
-        cookie: {
-          maxAge: 14 * 24 * 60 * 60 * 1000, // 14 days
-          httpOnly: true,
-          secure: process.env.NODE_ENV === 'production', // HTTPS only in production
-          sameSite: 'lax'
-        }
-      })
-    );
+    const sessionConfig = {
+      secret: process.env.SESSION_SECRET,
+      resave: false,
+      saveUninitialized: false,
+      store: MongoStore.create({
+        client: client,
+        dbName: 'anecdotes-stories',
+        collectionName: 'sessions',
+        ttl: 14 * 24 * 60 * 60 // 14 days
+      }),
+      cookie: {
+        maxAge: 14 * 24 * 60 * 60 * 1000, // 14 days
+        httpOnly: true,
+        secure: process.env.NODE_ENV === 'production', // HTTPS only in production
+        sameSite: 'lax'
+      }
+    };
+
+    console.log("\n🍪 Session Configuration:");
+    console.log("Cookie secure:", sessionConfig.cookie.secure);
+    console.log("Cookie httpOnly:", sessionConfig.cookie.httpOnly);
+    console.log("Cookie sameSite:", sessionConfig.cookie.sameSite);
+    console.log("Trust proxy:", app.get('trust proxy'), "\n");
+
+    app.use(session(sessionConfig));
 
     // Initialize Passport
     const passport = require('./config/passport')(db);
@@ -116,7 +127,10 @@ MongoClient.connect(dbConnectionStr, { useUnifiedTopology: true })
     app.get("/auth/google/callback",
       passport.authenticate("google", { failureRedirect: "/login" }),
       (req, res) => {
-        console.log("✅ Google OAuth successful, user:", req.user?.email);
+        console.log("✅ Google OAuth successful");
+        console.log("User:", req.user?.email);
+        console.log("Session ID:", req.sessionID);
+        console.log("Is Authenticated:", req.isAuthenticated());
         res.redirect("/");
       }
     );
@@ -130,7 +144,10 @@ MongoClient.connect(dbConnectionStr, { useUnifiedTopology: true })
     app.get("/auth/github/callback",
       passport.authenticate("github", { failureRedirect: "/login" }),
       (req, res) => {
-        console.log("✅ GitHub OAuth successful, user:", req.user?.email || req.user?.name);
+        console.log("✅ GitHub OAuth successful");
+        console.log("User:", req.user?.email || req.user?.name);
+        console.log("Session ID:", req.sessionID);
+        console.log("Is Authenticated:", req.isAuthenticated());
         res.redirect("/");
       }
     );
@@ -171,6 +188,11 @@ MongoClient.connect(dbConnectionStr, { useUnifiedTopology: true })
 
     // Landing page
     app.get("/", (req, res) => {
+      console.log("🏠 Landing page accessed");
+      console.log("Session ID:", req.sessionID);
+      console.log("Is Authenticated:", req.isAuthenticated());
+      console.log("User:", req.user ? req.user.email || req.user.name : "Not logged in");
+
       storiesCollection
         .find()
         .sort({ createdAt: -1 })

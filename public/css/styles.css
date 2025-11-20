@@ -450,6 +450,8 @@ a {
   color: var(--warm-gray);
   line-height: 1.8;
   margin: 0;
+  white-space: pre-wrap;
+  word-wrap: break-word;
 }
 
 .story-tags {
@@ -793,6 +795,8 @@ a {
   font-size: 1.1rem;
   line-height: 1.8;
   color: var(--ink-black);
+  white-space: pre-wrap;
+  word-wrap: break-word;
 }
 
 .tag-icon {

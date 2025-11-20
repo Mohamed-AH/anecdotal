@@ -19,7 +19,7 @@ function isAuthenticated(req, res, next) {
 }
 
 // Check if user owns the resource (for stories)
-async function isOwner(storiesCollection) {
+function isOwner(storiesCollection) {
   return async (req, res, next) => {
     if (!req.isAuthenticated()) {
       if (req.path.startsWith('/api/')) {

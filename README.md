@@ -6,8 +6,16 @@ Anecdotal is a modern, beautifully designed platform where writers can craft, pu
 
 ## 🌟 Features
 
+### Authentication & Profiles
+- **OAuth 2.0 Sign-In** - Secure login with Google or GitHub
+- **User Profiles** - Personalized profile pages with your stories
+- **Pen Names** - Write under your real name or a pseudonym
+- **Ownership Control** - Only you can edit or delete your stories
+- **Persistent Sessions** - Stay logged in across visits
+
 ### For Writers
 - **Distraction-Free Writing Interface** - Clean, focused environment for composing your stories
+- **Automatic Author Attribution** - Stories automatically credited to your pen name
 - **Live Preview** - See how your story will appear before publishing
 - **Auto-Save Drafts** - Never lose your work with automatic draft saving
 - **Character Counter** - Stay within the sweet spot with real-time character tracking
@@ -17,7 +25,8 @@ Anecdotal is a modern, beautifully designed platform where writers can craft, pu
 - **Advanced Search** - Find stories by author, content, or tags
 - **Smart Filtering** - Sort by date or author
 - **Responsive Design** - Beautiful reading experience on any device
-- **Story Management** - Edit or delete your published stories
+- **Writer Profiles** - View all stories from your favorite authors
+- **Story Management** - Edit or delete your own published stories
 
 ### Design Philosophy
 - **Literary Aesthetic** - Distinctive typography using Crimson Pro, Literata, and Cormorant Garamond
@@ -35,9 +44,17 @@ Anecdotal is a modern, beautifully designed platform where writers can craft, pu
 
 **Backend:**
 - Node.js & Express.js
-- MongoDB with native driver
+- MongoDB with native driver (v5)
 - RESTful API architecture
 - Input validation & sanitization
+- Passport.js for OAuth authentication
+- Express-session with MongoDB store
+
+**Authentication:**
+- OAuth 2.0 (Google & GitHub)
+- Secure session management
+- CSRF protection
+- HttpOnly cookies
 
 **Development:**
 - Nodemon for hot-reload
@@ -48,19 +65,27 @@ Anecdotal is a modern, beautifully designed platform where writers can craft, pu
 
 ```
 anecdotal/
+├── config/
+│   └── passport.js       # Passport OAuth strategies
+├── middleware/
+│   └── auth.js           # Authentication middleware
 ├── views/
 │   ├── landing.ejs       # Homepage with featured stories
 │   ├── stories.ejs       # Browse all stories
 │   ├── write.ejs         # Story composition page
+│   ├── login.ejs         # OAuth login page
+│   ├── profile.ejs       # User profile page
 │   └── error.ejs         # Error page
 ├── public/
 │   ├── css/
-│   │   └── styles.css    # Complete design system
+│   │   └── styles.css    # Complete design system + auth styles
 │   └── js/
 │       ├── landing.js    # Landing page interactions
 │       ├── stories.js    # Browse & manage stories
-│       └── write.js      # Writing interface logic
+│       ├── write.js      # Writing interface logic
+│       └── profile.js    # Profile page interactions
 ├── server.js             # Express server & API routes
+├── OAUTH_SETUP.md        # OAuth configuration guide
 ├── package.json
 └── README.md
 ```
@@ -89,8 +114,23 @@ anecdotal/
 
    Create a `.env` file in the root directory:
    ```env
+   # Database
    DB_STRING=your_mongodb_connection_string
    PORT=8000
+   NODE_ENV=development
+
+   # Session (generate a random 32+ character string)
+   SESSION_SECRET=your_random_secret_key_minimum_32_characters_long
+
+   # OAuth Credentials
+   GOOGLE_CLIENT_ID=your_google_client_id
+   GOOGLE_CLIENT_SECRET=your_google_client_secret
+   GITHUB_CLIENT_ID=your_github_client_id
+   GITHUB_CLIENT_SECRET=your_github_client_secret
+
+   # URLs
+   DEVELOPMENT_URL=http://localhost:8000
+   PRODUCTION_URL=https://your-app.onrender.com
    ```
 
 4. **Get your MongoDB connection string**
@@ -99,7 +139,17 @@ anecdotal/
    - Get your connection string (replace `<password>` with your actual password)
    - Example: `mongodb+srv://username:password@cluster0.xxxxx.mongodb.net/anecdotes-stories?retryWrites=true&w=majority`
 
-5. **Run the application**
+5. **Set up OAuth authentication**
+
+   **See [OAUTH_SETUP.md](./OAUTH_SETUP.md) for detailed instructions.**
+
+   Quick overview:
+   - Create a Google OAuth app at [Google Cloud Console](https://console.cloud.google.com/)
+   - Create a GitHub OAuth app at [GitHub Developer Settings](https://github.com/settings/developers)
+   - Add the credentials to your `.env` file
+   - Configure callback URLs for your environment
+
+6. **Run the application**
 
    Development mode (with auto-reload):
    ```bash
@@ -118,28 +168,47 @@ anecdotal/
 
 ## 📡 API Endpoints
 
+### Public Routes
 | Method | Endpoint | Description |
 |--------|----------|-------------|
 | `GET` | `/` | Landing page with featured stories |
 | `GET` | `/stories` | Browse all stories (supports search & sort) |
-| `GET` | `/write` | Story composition page |
-| `POST` | `/api/stories` | Create a new story |
-| `PUT` | `/api/stories/:id` | Update a story by ID |
-| `DELETE` | `/api/stories/:id` | Delete a story by ID |
+| `GET` | `/login` | OAuth login page |
 | `GET` | `/api/stats` | Get platform statistics |
+
+### Authentication Routes
+| Method | Endpoint | Description |
+|--------|----------|-------------|
+| `GET` | `/auth/google` | Initiate Google OAuth flow |
+| `GET` | `/auth/google/callback` | Google OAuth callback |
+| `GET` | `/auth/github` | Initiate GitHub OAuth flow |
+| `GET` | `/auth/github/callback` | GitHub OAuth callback |
+| `GET` | `/auth/logout` | Logout and destroy session |
+
+### Protected Routes (Requires Authentication)
+| Method | Endpoint | Description |
+|--------|----------|-------------|
+| `GET` | `/write` | Story composition page |
+| `GET` | `/profile` | Your profile page |
+| `GET` | `/profile/:userId` | View another user's profile |
+| `POST` | `/api/stories` | Create a new story |
+| `PUT` | `/api/stories/:id` | Update your own story |
+| `DELETE` | `/api/stories/:id` | Delete your own story |
+| `POST` | `/api/profile` | Update your pen name |
 
 ### Example API Request
 
-**Create a story:**
+**Create a story (authenticated):**
 ```javascript
+// User must be logged in
 fetch('/api/stories', {
   method: 'POST',
   headers: { 'Content-Type': 'application/json' },
   body: JSON.stringify({
-    Author: 'Jane Doe',
     Story: 'Once upon a time, in a land far away...',
     tags: 'fiction, fantasy'
   })
+  // Author is automatically set from authenticated user's pen name
 })
 ```
 
@@ -156,10 +225,24 @@ fetch('/api/stories', {
    - Start Command: `npm start`
 
 3. **Add Environment Variables**
-   - Add `DB_STRING` with your MongoDB connection string
+   ```env
+   DB_STRING=your_mongodb_connection_string
+   NODE_ENV=production
+   SESSION_SECRET=your_random_secret_key
+   GOOGLE_CLIENT_ID=your_google_client_id
+   GOOGLE_CLIENT_SECRET=your_google_client_secret
+   GITHUB_CLIENT_ID=your_github_client_id
+   GITHUB_CLIENT_SECRET=your_github_client_secret
+   PRODUCTION_URL=https://your-app.onrender.com
+   ```
    - `PORT` will be automatically set by Render
 
-4. **Deploy!**
+4. **Configure OAuth for Production**
+   - Update your Google OAuth app with production callback URL
+   - Create a separate GitHub OAuth app for production
+   - See [OAUTH_SETUP.md](./OAUTH_SETUP.md) for detailed steps
+
+5. **Deploy!**
    - Render will auto-deploy on every git push
 
 ### Alternative Options
@@ -200,14 +283,16 @@ Contributions are welcome! Please follow these steps:
 
 ## 📝 Future Enhancements
 
-- [ ] User authentication & profiles
+- [x] User authentication & profiles ✨ **Completed!**
 - [ ] Story bookmarking/favorites
 - [ ] Comments & reactions
 - [ ] Social sharing
 - [ ] Reading time estimates
-- [ ] Draft management
+- [ ] Draft management system
 - [ ] Rich text editor
 - [ ] Story collections/series
+- [ ] Email notifications
+- [ ] Story statistics & analytics
 
 ## 📄 License
 

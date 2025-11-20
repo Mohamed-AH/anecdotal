@@ -47,6 +47,23 @@ let dbConnectionStr = process.env.DB_STRING;
 MongoClient.connect(dbConnectionStr, { useUnifiedTopology: true })
   .then((client) => {
     console.log("✅ Connected to Database");
+
+    // Debug: Log environment configuration
+    console.log("\n🔍 Environment Configuration:");
+    console.log("NODE_ENV:", process.env.NODE_ENV || "NOT SET");
+    console.log("DEVELOPMENT_URL:", process.env.DEVELOPMENT_URL || "NOT SET");
+    console.log("PRODUCTION_URL:", process.env.PRODUCTION_URL || "NOT SET");
+    console.log("SESSION_SECRET:", process.env.SESSION_SECRET ? "✅ Set" : "❌ NOT SET");
+    console.log("GOOGLE_CLIENT_ID:", process.env.GOOGLE_CLIENT_ID ? "✅ Set" : "❌ NOT SET");
+    console.log("GOOGLE_CLIENT_SECRET:", process.env.GOOGLE_CLIENT_SECRET ? "✅ Set" : "❌ NOT SET");
+    console.log("GITHUB_CLIENT_ID:", process.env.GITHUB_CLIENT_ID ? "✅ Set" : "❌ NOT SET");
+    console.log("GITHUB_CLIENT_SECRET:", process.env.GITHUB_CLIENT_SECRET ? "✅ Set" : "❌ NOT SET");
+
+    const callbackURL = (process.env.NODE_ENV === 'production' ? process.env.PRODUCTION_URL : process.env.DEVELOPMENT_URL);
+    console.log("\n🔗 OAuth Callback URLs will be:");
+    console.log("Google:", `${callbackURL}/auth/google/callback`);
+    console.log("GitHub:", `${callbackURL}/auth/github/callback\n`);
+
     const db = client.db("anecdotes-stories");
     const storiesCollection = db.collection("stories");
     const usersCollection = db.collection("users");
@@ -91,25 +108,29 @@ MongoClient.connect(dbConnectionStr, { useUnifiedTopology: true })
     });
 
     // Google OAuth
-    app.get("/auth/google",
-      passport.authenticate("google", { scope: ["profile", "email"] })
-    );
+    app.get("/auth/google", (req, res, next) => {
+      console.log("🔵 Initiating Google OAuth...");
+      passport.authenticate("google", { scope: ["profile", "email"] })(req, res, next);
+    });
 
     app.get("/auth/google/callback",
       passport.authenticate("google", { failureRedirect: "/login" }),
       (req, res) => {
+        console.log("✅ Google OAuth successful, user:", req.user?.email);
         res.redirect("/");
       }
     );
 
     // GitHub OAuth
-    app.get("/auth/github",
-      passport.authenticate("github", { scope: ["user:email"] })
-    );
+    app.get("/auth/github", (req, res, next) => {
+      console.log("🔵 Initiating GitHub OAuth...");
+      passport.authenticate("github", { scope: ["user:email"] })(req, res, next);
+    });
 
     app.get("/auth/github/callback",
       passport.authenticate("github", { failureRedirect: "/login" }),
       (req, res) => {
+        console.log("✅ GitHub OAuth successful, user:", req.user?.email || req.user?.name);
         res.redirect("/");
       }
     );

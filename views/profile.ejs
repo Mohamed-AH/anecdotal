@@ -1,0 +1,260 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title><%= profileUser.penName || profileUser.name %>'s Profile - Anecdotal</title>
+  <link rel="stylesheet" href="/css/styles.css">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Crimson+Pro:wght@400;600;700&family=Literata:opsz,wght@7..72,300;7..72,400;7..72,600&family=Cormorant+Garamond:ital,wght@0,400;0,600;1,400&display=swap" rel="stylesheet">
+</head>
+<body class="profile-page">
+
+  <!-- Navigation -->
+  <nav class="nav-main">
+    <div class="nav-container">
+      <a href="/" class="logo">Anecdotal</a>
+      <div class="nav-links">
+        <a href="/stories">Browse Stories</a>
+        <a href="/write" class="btn-primary-small">Write</a>
+        <% if (user) { %>
+        <div class="user-menu">
+          <button class="user-menu-button" id="user-menu-btn">
+            <img src="<%= user.avatar %>" alt="<%= user.name %>" class="user-avatar-small">
+            <span class="user-name-nav"><%= user.penName || user.name %></span>
+            <svg class="chevron-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <polyline points="6 9 12 15 18 9"></polyline>
+            </svg>
+          </button>
+          <div class="user-menu-dropdown" id="user-menu-dropdown">
+            <a href="/profile" class="menu-item">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path>
+                <circle cx="12" cy="7" r="4"></circle>
+              </svg>
+              My Profile
+            </a>
+            <a href="/auth/logout" class="menu-item">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"></path>
+                <polyline points="16 17 21 12 16 7"></polyline>
+                <line x1="21" y1="12" x2="9" y2="12"></line>
+              </svg>
+              Logout
+            </a>
+          </div>
+        </div>
+        <% } %>
+      </div>
+    </div>
+  </nav>
+
+  <!-- Profile Header -->
+  <header class="profile-header">
+    <div class="profile-header-content">
+      <div class="profile-avatar-container fade-in">
+        <img src="<%= profileUser.avatar %>" alt="<%= profileUser.name %>" class="profile-avatar">
+        <div class="provider-badge <%= profileUser.provider %>-badge">
+          <% if (profileUser.provider === 'google') { %>
+            <svg viewBox="0 0 24 24">
+              <path fill="#4285F4" d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"/>
+              <path fill="#34A853" d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z"/>
+              <path fill="#FBBC05" d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l2.85-2.22.81-.62z"/>
+              <path fill="#EA4335" d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z"/>
+            </svg>
+          <% } else if (profileUser.provider === 'github') { %>
+            <svg viewBox="0 0 24 24" fill="currentColor">
+              <path d="M12 0c-6.626 0-12 5.373-12 12 0 5.302 3.438 9.8 8.207 11.387.599.111.793-.261.793-.577v-2.234c-3.338.726-4.033-1.416-4.033-1.416-.546-1.387-1.333-1.756-1.333-1.756-1.089-.745.083-.729.083-.729 1.205.084 1.839 1.237 1.839 1.237 1.07 1.834 2.807 1.304 3.492.997.107-.775.418-1.305.762-1.604-2.665-.305-5.467-1.334-5.467-5.931 0-1.311.469-2.381 1.236-3.221-.124-.303-.535-1.524.117-3.176 0 0 1.008-.322 3.301 1.23.957-.266 1.983-.399 3.003-.404 1.02.005 2.047.138 3.006.404 2.291-1.552 3.297-1.23 3.297-1.23.653 1.653.242 2.874.118 3.176.77.84 1.235 1.911 1.235 3.221 0 4.609-2.807 5.624-5.479 5.921.43.372.823 1.102.823 2.222v3.293c0 .319.192.694.801.576 4.765-1.589 8.199-6.086 8.199-11.386 0-6.627-5.373-12-12-12z"/>
+            </svg>
+          <% } %>
+        </div>
+      </div>
+
+      <div class="profile-info fade-in" style="animation-delay: 0.1s">
+        <h1 class="profile-name"><%= profileUser.penName || profileUser.name %></h1>
+        <% if (profileUser.penName && profileUser.penName !== profileUser.name) { %>
+          <p class="profile-real-name">(<%= profileUser.name %>)</p>
+        <% } %>
+        <p class="profile-email"><%= profileUser.email %></p>
+        <p class="profile-joined">
+          Joined <%= new Date(profileUser.createdAt).toLocaleDateString('en-US', {
+            year: 'numeric',
+            month: 'long',
+            day: 'numeric'
+          }) %>
+        </p>
+      </div>
+
+      <div class="profile-stats fade-in" style="animation-delay: 0.2s">
+        <div class="profile-stat">
+          <div class="stat-value"><%= stories.length %></div>
+          <div class="stat-label">Stories</div>
+        </div>
+      </div>
+
+      <% if (isOwnProfile) { %>
+      <div class="profile-actions fade-in" style="animation-delay: 0.3s">
+        <button id="edit-pen-name-btn" class="btn-secondary">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"></path>
+            <path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"></path>
+          </svg>
+          Edit Pen Name
+        </button>
+      </div>
+      <% } %>
+    </div>
+  </header>
+
+  <!-- Profile Content -->
+  <main class="profile-main">
+    <div class="profile-container">
+
+      <% if (stories.length === 0) { %>
+        <div class="empty-profile-state">
+          <svg class="empty-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+            <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path>
+            <polyline points="14 2 14 8 20 8"></polyline>
+          </svg>
+          <h2><% if (isOwnProfile) { %>You haven't written any stories yet<% } else { %>No stories published yet<% } %></h2>
+          <% if (isOwnProfile) { %>
+            <p><a href="/write">Write your first story</a> and share it with the world!</p>
+          <% } %>
+        </div>
+      <% } else { %>
+        <h2 class="section-title-profile">
+          <% if (isOwnProfile) { %>Your Stories<% } else { %>Stories by <%= profileUser.penName || profileUser.name %><% } %>
+        </h2>
+
+        <div class="profile-stories-grid">
+          <% stories.forEach((story, index) => { %>
+            <article class="story-card-profile fade-in" style="animation-delay: <%= 0.05 * (index + 1) %>s">
+              <div class="story-date-profile">
+                <%= new Date(story.createdAt).toLocaleDateString('en-US', {
+                  year: 'numeric',
+                  month: 'short',
+                  day: 'numeric'
+                }) %>
+              </div>
+
+              <div class="story-content-profile">
+                <p class="story-text"><%= story.Story.length > 300 ? story.Story.substring(0, 300) + '...' : story.Story %></p>
+              </div>
+
+              <% if (story.tags) { %>
+              <div class="story-tags">
+                <svg class="tag-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <path d="M20.59 13.41l-7.17 7.17a2 2 0 0 1-2.83 0L2 12V2h10l8.59 8.59a2 2 0 0 1 0 2.82z"></path>
+                  <line x1="7" y1="7" x2="7.01" y2="7"></line>
+                </svg>
+                <span class="tag"><%= story.tags %></span>
+              </div>
+              <% } %>
+
+              <% if (isOwnProfile) { %>
+              <div class="story-actions-profile">
+                <button class="action-btn edit-btn" data-id="<%= story._id %>" data-story="<%= story.Story %>" data-tags="<%= story.tags || '' %>">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"></path>
+                    <path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"></path>
+                  </svg>
+                  Edit
+                </button>
+                <button class="action-btn delete-btn" data-id="<%= story._id %>">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <polyline points="3 6 5 6 21 6"></polyline>
+                    <path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path>
+                  </svg>
+                  Delete
+                </button>
+              </div>
+              <% } %>
+            </article>
+          <% }); %>
+        </div>
+      <% } %>
+
+    </div>
+  </main>
+
+  <!-- Edit Pen Name Modal -->
+  <% if (isOwnProfile) { %>
+  <div id="pen-name-modal" class="modal">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h2>Edit Pen Name</h2>
+        <button class="modal-close" id="close-pen-name-modal">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <line x1="18" y1="6" x2="6" y2="18"></line>
+            <line x1="6" y1="6" x2="18" y2="18"></line>
+          </svg>
+        </button>
+      </div>
+      <form id="pen-name-form">
+        <div class="form-group">
+          <label for="pen-name-input">Pen Name</label>
+          <input type="text" id="pen-name-input" value="<%= profileUser.penName || profileUser.name %>" required maxlength="100" class="form-input">
+          <p class="input-hint">This is the name that will appear on all your stories</p>
+        </div>
+        <div class="form-actions">
+          <button type="button" class="btn-secondary" id="cancel-pen-name">Cancel</button>
+          <button type="submit" class="btn-primary">Save Changes</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- Edit Story Modal -->
+  <div id="edit-story-modal" class="modal">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h2>Edit Story</h2>
+        <button class="modal-close" id="close-edit-modal">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <line x1="18" y1="6" x2="6" y2="18"></line>
+            <line x1="6" y1="6" x2="18" y2="18"></line>
+          </svg>
+        </button>
+      </div>
+      <form id="edit-story-form">
+        <input type="hidden" id="edit-story-id">
+        <div class="form-group">
+          <label for="edit-story-text">Story</label>
+          <textarea id="edit-story-text" rows="8" required minlength="10" maxlength="5000" class="form-textarea"></textarea>
+        </div>
+        <div class="form-group">
+          <label for="edit-story-tags">Tags (optional)</label>
+          <input type="text" id="edit-story-tags" placeholder="fiction, memoir, poetry..." class="form-input">
+        </div>
+        <div class="form-actions">
+          <button type="button" class="btn-secondary" id="cancel-edit">Cancel</button>
+          <button type="submit" class="btn-primary">Save Changes</button>
+        </div>
+      </form>
+    </div>
+  </div>
+  <% } %>
+
+  <!-- Footer -->
+  <footer class="footer">
+    <div class="footer-content">
+      <div class="footer-brand">
+        <h3>Anecdotal</h3>
+        <p>Where stories breathe and writers thrive.</p>
+      </div>
+      <div class="footer-links">
+        <a href="/stories">Browse</a>
+        <a href="/write">Write</a>
+        <a href="https://github.com/Mohamed-AH/anecdotal" target="_blank">GitHub</a>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      <p>&copy; <%= new Date().getFullYear() %> Anecdotal. Crafted with care for storytellers.</p>
+    </div>
+  </footer>
+
+  <script src="/js/profile.js"></script>
+
+</body>
+</html>

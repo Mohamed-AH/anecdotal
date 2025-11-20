@@ -1,6 +1,22 @@
 // Stories Page JavaScript
 
 document.addEventListener('DOMContentLoaded', () => {
+  // User menu dropdown
+  const userMenuBtn = document.getElementById('user-menu-btn');
+  const userMenuDropdown = document.getElementById('user-menu-dropdown');
+
+  if (userMenuBtn) {
+    userMenuBtn.addEventListener('click', (e) => {
+      e.stopPropagation();
+      userMenuDropdown.classList.toggle('active');
+    });
+
+    // Close dropdown when clicking outside
+    document.addEventListener('click', () => {
+      userMenuDropdown.classList.remove('active');
+    });
+  }
+
   // Fade-in animations
   const observerOptions = {
     threshold: 0.1,

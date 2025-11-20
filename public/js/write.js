@@ -1,9 +1,24 @@
 // Write Page JavaScript
 
 document.addEventListener('DOMContentLoaded', () => {
+  // User menu dropdown
+  const userMenuBtn = document.getElementById('user-menu-btn');
+  const userMenuDropdown = document.getElementById('user-menu-dropdown');
+
+  if (userMenuBtn) {
+    userMenuBtn.addEventListener('click', (e) => {
+      e.stopPropagation();
+      userMenuDropdown.classList.toggle('active');
+    });
+
+    // Close dropdown when clicking outside
+    document.addEventListener('click', () => {
+      userMenuDropdown.classList.remove('active');
+    });
+  }
+
   // Elements
   const form = document.getElementById('story-form');
-  const authorInput = document.getElementById('author-input');
   const storyInput = document.getElementById('story-input');
   const tagsInput = document.getElementById('tags-input');
   const charCount = document.getElementById('char-count');
@@ -61,12 +76,11 @@ document.addEventListener('DOMContentLoaded', () => {
 
   // Preview functionality
   previewBtn.addEventListener('click', () => {
-    const author = authorInput.value.trim();
     const story = storyInput.value.trim();
     const tags = tagsInput.value.trim();
 
-    if (!author || !story) {
-      showMessage('Please fill in your name and story before previewing', true);
+    if (!story) {
+      showMessage('Please write your story before previewing', true);
       return;
     }
 
@@ -76,7 +90,7 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     // Populate preview
-    document.getElementById('preview-author').textContent = author;
+    document.getElementById('preview-author').textContent = 'You';
     document.getElementById('preview-date').textContent = new Date().toLocaleDateString('en-US', {
       year: 'numeric',
       month: 'long',
@@ -121,13 +135,12 @@ document.addEventListener('DOMContentLoaded', () => {
   form.addEventListener('submit', async (e) => {
     e.preventDefault();
 
-    const author = authorInput.value.trim();
     const story = storyInput.value.trim();
     const tags = tagsInput.value.trim();
 
     // Validation
-    if (!author || !story) {
-      showMessage('Please fill in all required fields', true);
+    if (!story) {
+      showMessage('Please write your story before publishing', true);
       return;
     }
 
@@ -157,7 +170,6 @@ document.addEventListener('DOMContentLoaded', () => {
           'Content-Type': 'application/json'
         },
         body: JSON.stringify({
-          Author: author,
           Story: story,
           tags: tags
         })
@@ -208,9 +220,8 @@ document.addEventListener('DOMContentLoaded', () => {
   // Auto-save to localStorage (optional feature)
   const AUTOSAVE_KEY = 'anecdotal_draft';
 
-  const saveraft = () => {
+  const saveDraft = () => {
     const draft = {
-      author: authorInput.value,
       story: storyInput.value,
       tags: tagsInput.value,
       timestamp: Date.now()
@@ -226,7 +237,6 @@ document.addEventListener('DOMContentLoaded', () => {
         // Only load if it's less than 24 hours old
         if (Date.now() - draft.timestamp < 24 * 60 * 60 * 1000) {
           if (confirm('We found an unsaved draft. Would you like to restore it?')) {
-            authorInput.value = draft.author || '';
             storyInput.value = draft.story || '';
             tagsInput.value = draft.tags || '';
             storyInput.dispatchEvent(new Event('input')); // Update char count
@@ -245,7 +255,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
   // Auto-save every 30 seconds
   let saveTimeout;
-  [authorInput, storyInput, tagsInput].forEach(input => {
+  [storyInput, tagsInput].forEach(input => {
     input.addEventListener('input', () => {
       clearTimeout(saveTimeout);
       saveTimeout = setTimeout(saveDraft, 30000);

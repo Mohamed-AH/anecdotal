@@ -4,6 +4,17 @@ const PORT = 8000;
 const cors = require("cors");
 require('dotenv').config();
 
+//debug
+console.log('🔍 Environment Check:');
+console.log('NODE_ENV:', process.env.NODE_ENV);
+console.log('PRODUCTION_URL:', process.env.PRODUCTION_URL);
+console.log('Callback URL will be:', 
+  process.env.NODE_ENV === 'production' 
+    ? process.env.PRODUCTION_URL + '/auth/google/callback'
+    : process.env.DEVELOPMENT_URL + '/auth/google/callback'
+);
+// end debug
+
 const bodyParser = require("body-parser");
 const session = require('express-session');
 const MongoStore = require('connect-mongo');

@@ -1,7 +1,7 @@
 {
   "name": "anecdotal",
   "version": "2.0.0",
-  "description": "A creative platform for writers to share anecdotes and short stories",
+  "description": "A literary sanctuary for creative writers to share anecdotes, micro-stories, and moments that matter. Features OAuth authentication, user profiles, and a beautiful literary aesthetic.",
   "main": "server.js",
   "scripts": {
     "start": "node server.js",
@@ -12,10 +12,18 @@
     "stories",
     "anecdotes",
     "creative-writing",
-    "writers"
+    "writers",
+    "oauth",
+    "literary",
+    "storytelling",
+    "writing-platform"
   ],
-  "author": "",
+  "author": "Mohamed AH",
   "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/Mohamed-AH/anecdotal.git"
+  },
   "engines": {
     "node": ">=14.x"
   },

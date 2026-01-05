@@ -108,6 +108,29 @@ MongoClient.connect(dbConnectionStr, { useUnifiedTopology: true })
     // Make user available in all templates
     app.use(injectUser);
 
+    // ===== HEALTH CHECK =====
+    app.get("/health", async (req, res) => {
+      try {
+        // Check database connectivity
+        await db.admin().ping();
+
+        res.status(200).json({
+          status: "healthy",
+          timestamp: new Date().toISOString(),
+          database: "connected",
+          uptime: process.uptime()
+        });
+      } catch (error) {
+        console.error("Health check failed:", error);
+        res.status(503).json({
+          status: "unhealthy",
+          timestamp: new Date().toISOString(),
+          database: "disconnected",
+          error: error.message
+        });
+      }
+    });
+
     // ===== AUTHENTICATION ROUTES =====
 
     // Login page
